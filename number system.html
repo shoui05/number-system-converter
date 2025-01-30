@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number System Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            margin: auto;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 15px 32px;
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+            background-color: maroon;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body vlink="red">
+
+    <div class="container">
+        <h2>Number System Converter</h2>
+        
+        <label>Decimal:</label>
+        <input type="text" id="decimal" oninput="convertFromDecimal()" placeholder="Enter decimal number">
+        
+        <label>Binary:</label>
+        <input type="text" id="binary" oninput="convertFromBinary()" placeholder="Enter binary number">
+        
+        <label>Octal:</label>
+        <input type="text" id="octal" oninput="convertFromOctal()" placeholder="Enter octal number">
+        
+        <label>Hexadecimal:</label>
+        <input type="text" id="hexadecimal" oninput="convertFromHex()" placeholder="Enter hexadecimal number">
+        
+    </div>
+    
+    <br><br>
+    
+    <a href="Frame.htm" class="button">Go to Calculator</a>
+
+
+    
+
+    <script>
+        function convertFromDecimal() {
+            let decimal = document.getElementById("decimal").value.trim();
+            if (decimal === "" || isNaN(decimal)) return;
+
+            decimal = parseFloat(decimal);
+
+            document.getElementById("binary").value = decimalToBinary(decimal);
+            document.getElementById("octal").value = decimalToOctal(decimal);
+            document.getElementById("hexadecimal").value = decimalToHex(decimal);
+        }
+
+        function convertFromBinary() {
+            let binary = document.getElementById("binary").value.trim();
+            if (binary === "" || !/^[01.]+$/.test(binary)) return;
+
+            let decimal = binaryToDecimal(binary);
+            document.getElementById("decimal").value = decimal;
+            document.getElementById("octal").value = decimalToOctal(decimal);
+            document.getElementById("hexadecimal").value = decimalToHex(decimal);
+        }
+
+        function convertFromOctal() {
+            let octal = document.getElementById("octal").value.trim();
+            if (octal === "" || !/^[0-7.]+$/.test(octal)) return;
+
+            let decimal = octalToDecimal(octal);
+            document.getElementById("decimal").value = decimal;
+            document.getElementById("binary").value = decimalToBinary(decimal);
+            document.getElementById("hexadecimal").value = decimalToHex(decimal);
+        }
+
+        function convertFromHex() {
+            let hex = document.getElementById("hexadecimal").value.trim();
+            if (hex === "" || !/^[0-9A-Fa-f.]+$/.test(hex)) return;
+
+            let decimal = hexToDecimal(hex);
+            document.getElementById("decimal").value = decimal;
+            document.getElementById("binary").value = decimalToBinary(decimal);
+            document.getElementById("octal").value = decimalToOctal(decimal);
+        }
+
+        function decimalToBinary(num) {
+            let parts = num.toString().split(".");
+            let integerPart = parseInt(parts[0]).toString(2);
+            let fractionPart = parts[1] ? decimalFractionToBinary(parseFloat("0." + parts[1])) : "";
+            return fractionPart ? integerPart + "." + fractionPart : integerPart;
+        }
+
+        function decimalFractionToBinary(fraction) {
+            let binary = "";
+            let limit = 10; 
+            while (fraction > 0 && limit > 0) {
+                fraction *= 2;
+                binary += Math.floor(fraction);
+                fraction -= Math.floor(fraction);
+                limit--;
+            }
+            return binary;
+        }
+
+        function binaryToDecimal(binary) {
+            let parts = binary.split(".");
+            let integerPart = parseInt(parts[0], 2);
+            let fractionPart = parts[1] ? binaryFractionToDecimal(parts[1]) : 0;
+            return integerPart + fractionPart;
+        }
+
+        function binaryFractionToDecimal(fraction) {
+            let decimal = 0;
+            for (let i = 0; i < fraction.length; i++) {
+                decimal += parseInt(fraction[i]) * Math.pow(2, -(i + 1));
+            }
+            return decimal;
+        }
+
+        function decimalToOctal(num) {
+            let parts = num.toString().split(".");
+            let integerPart = parseInt(parts[0]).toString(8);
+            let fractionPart = parts[1] ? decimalFractionToOctal(parseFloat("0." + parts[1])) : "";
+            return fractionPart ? integerPart + "." + fractionPart : integerPart;
+        }
+
+        function decimalFractionToOctal(fraction) {
+            let octal = "";
+            let limit = 10;
+            while (fraction > 0 && limit > 0) {
+                fraction *= 8;
+                octal += Math.floor(fraction);
+                fraction -= Math.floor(fraction);
+                limit--;
+            }
+            return octal;
+        }
+
+        function octalToDecimal(octal) {
+            let parts = octal.split(".");
+            let integerPart = parseInt(parts[0], 8);
+            let fractionPart = parts[1] ? octalFractionToDecimal(parts[1]) : 0;
+            return integerPart + fractionPart;
+        }
+
+        function octalFractionToDecimal(fraction) {
+            let decimal = 0;
+            for (let i = 0; i < fraction.length; i++) {
+                decimal += parseInt(fraction[i]) * Math.pow(8, -(i + 1));
+            }
+            return decimal;
+        }
+
+        function decimalToHex(num) {
+            let parts = num.toString().split(".");
+            let integerPart = parseInt(parts[0]).toString(16).toUpperCase();
+            let fractionPart = parts[1] ? decimalFractionToHex(parseFloat("0." + parts[1])) : "";
+            return fractionPart ? integerPart + "." + fractionPart : integerPart;
+        }
+
+        function decimalFractionToHex(fraction) {
+            let hex = "";
+            let limit = 10;
+            while (fraction > 0 && limit > 0) {
+                fraction *= 16;
+                let digit = Math.floor(fraction);
+                hex += digit.toString(16).toUpperCase();
+                fraction -= digit;
+                limit--;
+            }
+            return hex;
+        }
+
+        function hexToDecimal(hex) {
+            let parts = hex.split(".");
+            let integerPart = parseInt(parts[0], 16);
+            let fractionPart = parts[1] ? hexFractionToDecimal(parts[1]) : 0;
+            return integerPart + fractionPart;
+        }
+
+        function hexFractionToDecimal(fraction) {
+            let decimal = 0;
+            for (let i = 0; i < fraction.length; i++) {
+                decimal += parseInt(fraction[i], 16) * Math.pow(16, -(i + 1));
+            }
+            return decimal;
+        }
+    </script>
+
+</body>
+</html>
