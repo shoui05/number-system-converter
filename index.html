@@ -125,6 +125,23 @@
         .converter-btn:hover {
             opacity: 0.8;
         }
+
+        /* ক্লিয়ার বাটন স্টাইল */
+        .clear-btn {
+            background: #FF5722;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        .clear-btn:hover {
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -156,6 +173,9 @@
 
         <!-- কনভার্টার বাটন -->
         <button class="converter-btn" onclick="redirectToConverter()">Click to Convert</button>
+
+        <!-- ক্লিয়ার বাটন -->
+        <button class="clear-btn" onclick="clearAll()">Clear All</button>
     </div>
 
     <footer>
@@ -164,11 +184,18 @@
 
     <script>
         function parseInput(value, base) {
-            return parseInt(value, base);
+            // নেগেটিভ মান হ্যান্ডেল করার জন্য
+            let isNegative = value.startsWith("-");
+            value = value.replace("-", "");
+            let num = parseInt(value, base);
+            return isNegative ? -num : num;
         }
 
         function convertOutput(value, base) {
-            return value.toString(base).toUpperCase();
+            let isNegative = value < 0;
+            value = Math.abs(value);
+            let result = value.toString(base).toUpperCase();
+            return isNegative ? `-${result}` : result;
         }
 
         function updateInputs() {
@@ -231,6 +258,15 @@
             let system = localStorage.getItem("system"); // সংখ্যা পদ্ধতি নেওয়া
             // URL প্যারামিটার সহ example.html-এ রিডাইরেক্ট করা
             window.location.href = `example.html?result=${result || ""}&system=${system || ""}`;
+        }
+
+        // ক্লিয়ার বাটনের ফাংশন
+        function clearAll() {
+            document.getElementById("num1").value = "";
+            document.getElementById("num2").value = "";
+            document.getElementById("result").innerHTML = "Result: Waiting for input...";
+            localStorage.removeItem("result");
+            localStorage.removeItem("system");
         }
     </script>
 
