@@ -3,222 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Number System Converter</title>
+    <title>Smart Number System Calculator by SA . CreatoR</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             text-align: center;
-            background: #f5f5f5;
-            padding: 20px;
+            background: linear-gradient(135deg, #FCE4EC, #E3F2FD);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .presentation {
+            font-size: 24px;
+            font-weight: bold;
+            color: white; /* টাইটেলের সাথে ম্যাচ করে কালার */
+            background: #00796B;
+            padding: 15px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
         }
         .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            max-width: 400px;
-            margin: auto;
-        }
-        input {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
             width: 100%;
-            padding: 10px;
+            margin: 100px auto 60px; /* Adjusted margin for fixed header and footer */
+        }
+        h2 {
+            color: #00796B;
+            font-size: 22px;
+        }
+        select, input {
+            width: 90%;
+            padding: 12px;
             margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
+            border: 2px solid #00796B;
+            border-radius: 8px;
+            font-size: 18px;
             text-align: center;
+            background: rgba(0, 0, 0, 0.05);
+            outline: none;
         }
-        label {
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        .btn {
+            width: 22%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
             font-weight: bold;
-            font-size: 18px;
-        }
-        
-        .button {
-            display: inline-block;
-            padding: 15px 32px;
-            font-size: 18px;
-            text-align: center;
             cursor: pointer;
-            background-color: maroon;
+            transition: 0.3s;
             color: white;
-            border-radius: 5px;
-            text-decoration: none;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .btn-plus { background: #4CAF50; }
+        .btn-minus { background: #FF5722; }
+        .btn-multiply { background: #FFC107; }
+        .btn-divide { background: #3F51B5; }
+        
+        /* 🎯 ক্লিক করার পর ইফেক্ট */
+        .btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
         }
 
-        .button:hover {
-            background-color: #218838;
+        .btn:hover {
+            opacity: 0.8;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #D2691E;
+            border: 2px solid #00796B; /* ফলাফলের জন্য ফ্রেম */
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        /* 🔥 ফুটার স্টাইল */
+        footer {
+            background: #00796B;
+            color: white;
+            font-size: 18px;
+            padding: 15px;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        /* কনভার্টার বাটন স্টাইল */
+        .converter-btn {
+            background: #9C27B0;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        .converter-btn:hover {
+            opacity: 0.8;
         }
     </style>
 </head>
-<body vlink="red">
+<body>
+
+    <div class="presentation"><i><u>S A . CreatoR</u></i><span> <i>presents</i> </span></div>
 
     <div class="container">
-        <h2>Number System Converter</h2>
-        
-        <label>Decimal:</label>
-        <input type="text" id="decimal" oninput="convertFromDecimal()" placeholder="Enter decimal number">
-        
-        <label>Binary:</label>
-        <input type="text" id="binary" oninput="convertFromBinary()" placeholder="Enter binary number">
-        
-        <label>Octal:</label>
-        <input type="text" id="octal" oninput="convertFromOctal()" placeholder="Enter octal number">
-        
-        <label>Hexadecimal:</label>
-        <input type="text" id="hexadecimal" oninput="convertFromHex()" placeholder="Enter hexadecimal number">
-        
+        <h2>🔢 Number System Calculator</h2>
+
+        <label for="system">Select Number System:</label>
+        <select id="system" onchange="updateInputs()">
+            <option value="2">Binary (0-1)</option>
+            <option value="8">Octal (0-7)</option>
+            <option value="10" selected>Decimal (0-9)</option>
+            <option value="16">Hexadecimal (0-9, A-F)</option>
+        </select>
+
+        <input type="text" id="num1" placeholder="Enter number in Decimal">
+        <input type="text" id="num2" placeholder="Enter number in Decimal">
+
+        <div class="button-group">
+            <button class="btn btn-plus" onclick="calculate('+', this)">+</button>
+            <button class="btn btn-minus" onclick="calculate('-', this)">−</button>
+            <button class="btn btn-multiply" onclick="calculate('*', this)">×</button>
+            <button class="btn btn-divide" onclick="calculate('/', this)">÷</button>
+        </div>
+
+        <div class="result" id="result">Result: Waiting for input...</div>
+
+        <!-- কনভার্টার বাটন -->
+        <button class="converter-btn" onclick="redirectToConverter()">Click to Convert</button>
     </div>
-    
-    <br><br>
-    
-    <a href="example.html" class="button">Go to Calculator</a>
 
-
-    
+    <footer>
+        © 2025 Shouib Ahamed | All Rights Reserved
+    </footer>
 
     <script>
-        function convertFromDecimal() {
-            let decimal = document.getElementById("decimal").value.trim();
-            if (decimal === "" || isNaN(decimal)) return;
-
-            decimal = parseFloat(decimal);
-
-            document.getElementById("binary").value = decimalToBinary(decimal);
-            document.getElementById("octal").value = decimalToOctal(decimal);
-            document.getElementById("hexadecimal").value = decimalToHex(decimal);
+        function parseInput(value, base) {
+            return parseInt(value, base);
         }
 
-        function convertFromBinary() {
-            let binary = document.getElementById("binary").value.trim();
-            if (binary === "" || !/^[01.]+$/.test(binary)) return;
-
-            let decimal = binaryToDecimal(binary);
-            document.getElementById("decimal").value = decimal;
-            document.getElementById("octal").value = decimalToOctal(decimal);
-            document.getElementById("hexadecimal").value = decimalToHex(decimal);
+        function convertOutput(value, base) {
+            return value.toString(base).toUpperCase();
         }
 
-        function convertFromOctal() {
-            let octal = document.getElementById("octal").value.trim();
-            if (octal === "" || !/^[0-7.]+$/.test(octal)) return;
-
-            let decimal = octalToDecimal(octal);
-            document.getElementById("decimal").value = decimal;
-            document.getElementById("binary").value = decimalToBinary(decimal);
-            document.getElementById("hexadecimal").value = decimalToHex(decimal);
+        function updateInputs() {
+            let system = parseInt(document.getElementById("system").value);
+            let placeholderText = {
+                2: "Enter number in Binary (0-1)",
+                8: "Enter number in Octal (0-7)",
+                10: "Enter number in Decimal (0-9)",
+                16: "Enter number in Hexadecimal (0-9, A-F)"
+            };
+            
+            document.getElementById("num1").placeholder = placeholderText[system];
+            document.getElementById("num2").placeholder = placeholderText[system];
         }
 
-        function convertFromHex() {
-            let hex = document.getElementById("hexadecimal").value.trim();
-            if (hex === "" || !/^[0-9A-Fa-f.]+$/.test(hex)) return;
+        function calculate(operator, btn) {
+            let system = parseInt(document.getElementById("system").value);
+            let num1 = document.getElementById("num1").value.trim();
+            let num2 = document.getElementById("num2").value.trim();
 
-            let decimal = hexToDecimal(hex);
-            document.getElementById("decimal").value = decimal;
-            document.getElementById("binary").value = decimalToBinary(decimal);
-            document.getElementById("octal").value = decimalToOctal(decimal);
-        }
-
-        function decimalToBinary(num) {
-            let parts = num.toString().split(".");
-            let integerPart = parseInt(parts[0]).toString(2);
-            let fractionPart = parts[1] ? decimalFractionToBinary(parseFloat("0." + parts[1])) : "";
-            return fractionPart ? integerPart + "." + fractionPart : integerPart;
-        }
-
-        function decimalFractionToBinary(fraction) {
-            let binary = "";
-            let limit = 10; 
-            while (fraction > 0 && limit > 0) {
-                fraction *= 2;
-                binary += Math.floor(fraction);
-                fraction -= Math.floor(fraction);
-                limit--;
+            if (num1 === "" || num2 === "") {
+                document.getElementById("result").innerHTML = "Result: Waiting for input...";
+                return;
             }
-            return binary;
-        }
 
-        function binaryToDecimal(binary) {
-            let parts = binary.split(".");
-            let integerPart = parseInt(parts[0], 2);
-            let fractionPart = parts[1] ? binaryFractionToDecimal(parts[1]) : 0;
-            return integerPart + fractionPart;
-        }
+            let decimalNum1 = parseInput(num1, system);
+            let decimalNum2 = parseInput(num2, system);
 
-        function binaryFractionToDecimal(fraction) {
-            let decimal = 0;
-            for (let i = 0; i < fraction.length; i++) {
-                decimal += parseInt(fraction[i]) * Math.pow(2, -(i + 1));
+            if (isNaN(decimalNum1) || isNaN(decimalNum2)) {
+                document.getElementById("result").innerHTML = "Invalid input!";
+                return;
             }
-            return decimal;
-        }
 
-        function decimalToOctal(num) {
-            let parts = num.toString().split(".");
-            let integerPart = parseInt(parts[0]).toString(8);
-            let fractionPart = parts[1] ? decimalFractionToOctal(parseFloat("0." + parts[1])) : "";
-            return fractionPart ? integerPart + "." + fractionPart : integerPart;
-        }
-
-        function decimalFractionToOctal(fraction) {
-            let octal = "";
-            let limit = 10;
-            while (fraction > 0 && limit > 0) {
-                fraction *= 8;
-                octal += Math.floor(fraction);
-                fraction -= Math.floor(fraction);
-                limit--;
+            let result;
+            switch (operator) {
+                case "+": result = decimalNum1 + decimalNum2; break;
+                case "-": result = decimalNum1 - decimalNum2; break;
+                case "*": result = decimalNum1 * decimalNum2; break;
+                case "/": result = decimalNum2 !== 0 ? decimalNum1 / decimalNum2 : "Cannot divide by zero"; break;
+                default: result = "Invalid operation";
             }
-            return octal;
-        }
 
-        function octalToDecimal(octal) {
-            let parts = octal.split(".");
-            let integerPart = parseInt(parts[0], 8);
-            let fractionPart = parts[1] ? octalFractionToDecimal(parts[1]) : 0;
-            return integerPart + fractionPart;
-        }
-
-        function octalFractionToDecimal(fraction) {
-            let decimal = 0;
-            for (let i = 0; i < fraction.length; i++) {
-                decimal += parseInt(fraction[i]) * Math.pow(8, -(i + 1));
+            if (typeof result === "number") {
+                result = convertOutput(result, system);
             }
-            return decimal;
+
+            document.getElementById("result").innerHTML = `Result: ${result}`;
+
+            // Save result to localStorage
+            localStorage.setItem("result", result);
+            localStorage.setItem("system", system);
+
+            // 🎯 ক্লিক করা বোতাম হাইলাইট করা
+            document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         }
 
-        function decimalToHex(num) {
-            let parts = num.toString().split(".");
-            let integerPart = parseInt(parts[0]).toString(16).toUpperCase();
-            let fractionPart = parts[1] ? decimalFractionToHex(parseFloat("0." + parts[1])) : "";
-            return fractionPart ? integerPart + "." + fractionPart : integerPart;
-        }
-
-        function decimalFractionToHex(fraction) {
-            let hex = "";
-            let limit = 10;
-            while (fraction > 0 && limit > 0) {
-                fraction *= 16;
-                let digit = Math.floor(fraction);
-                hex += digit.toString(16).toUpperCase();
-                fraction -= digit;
-                limit--;
+        function redirectToConverter() {
+            let result = localStorage.getItem("result");
+            let system = localStorage.getItem("system");
+            if (result && system) {
+                window.location.href = `example.html?result=${result}&system=${system}`;
+            } else {
+                alert("No result found. Please calculate first.");
             }
-            return hex;
-        }
-
-        function hexToDecimal(hex) {
-            let parts = hex.split(".");
-            let integerPart = parseInt(parts[0], 16);
-            let fractionPart = parts[1] ? hexFractionToDecimal(parts[1]) : 0;
-            return integerPart + fractionPart;
-        }
-
-        function hexFractionToDecimal(fraction) {
-            let decimal = 0;
-            for (let i = 0; i < fraction.length; i++) {
-                decimal += parseInt(fraction[i], 16) * Math.pow(16, -(i + 1));
-            }
-            return decimal;
         }
     </script>
 
