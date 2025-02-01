@@ -37,10 +37,6 @@
             width: 100%;
             margin: 100px auto 60px;
         }
-        h2 {
-            color: #00796B;
-            font-size: 22px;
-        }
         input {
             width: 100%;
             padding: 10px;
@@ -80,6 +76,21 @@
             left: 0;
             z-index: 1000;
         }
+        .clear-btn {
+            background: #FF5722;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        .clear-btn:hover {
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -100,8 +111,11 @@
         
         <label>Hexadecimal:</label>
         <input type="text" id="hexadecimal" oninput="convertFromHex()" placeholder="Enter hexadecimal number">
+        
+        <!-- ক্লিয়ার বাটন -->
+        <button class="clear-btn" onclick="clearAll()">Clear All</button>
     </div>
-    
+
     <footer>
         © 2025 Shouib Ahamed | All Rights Reserved
     </footer>
@@ -148,7 +162,7 @@
 
         function convertFromBinary() {
             let binary = document.getElementById("binary").value.trim();
-            if (binary === "" || !/^[01.]+$/.test(binary)) return;
+            if (binary === "" || !/^-?[01.]+$/.test(binary)) return;
 
             let decimal = binaryToDecimal(binary);
             document.getElementById("decimal").value = decimal;
@@ -158,7 +172,7 @@
 
         function convertFromOctal() {
             let octal = document.getElementById("octal").value.trim();
-            if (octal === "" || !/^[0-7.]+$/.test(octal)) return;
+            if (octal === "" || !/^-?[0-7.]+$/.test(octal)) return;
 
             let decimal = octalToDecimal(octal);
             document.getElementById("decimal").value = decimal;
@@ -168,7 +182,7 @@
 
         function convertFromHex() {
             let hex = document.getElementById("hexadecimal").value.trim();
-            if (hex === "" || !/^[0-9A-Fa-f.]+$/.test(hex)) return;
+            if (hex === "" || !/^-?[0-9A-Fa-f.]+$/.test(hex)) return;
 
             let decimal = hexToDecimal(hex);
             document.getElementById("decimal").value = decimal;
@@ -177,10 +191,13 @@
         }
 
         function decimalToBinary(num) {
+            let isNegative = num < 0;
+            num = Math.abs(num);
             let parts = num.toString().split(".");
             let integerPart = parseInt(parts[0]).toString(2);
             let fractionPart = parts[1] ? decimalFractionToBinary(parseFloat("0." + parts[1])) : "";
-            return fractionPart ? integerPart + "." + fractionPart : integerPart;
+            let result = fractionPart ? integerPart + "." + fractionPart : integerPart;
+            return isNegative ? `-${result}` : result;
         }
 
         function decimalFractionToBinary(fraction) {
@@ -196,10 +213,13 @@
         }
 
         function binaryToDecimal(binary) {
+            let isNegative = binary.startsWith("-");
+            binary = binary.replace("-", "");
             let parts = binary.split(".");
             let integerPart = parseInt(parts[0], 2);
             let fractionPart = parts[1] ? binaryFractionToDecimal(parts[1]) : 0;
-            return integerPart + fractionPart;
+            let result = integerPart + fractionPart;
+            return isNegative ? -result : result;
         }
 
         function binaryFractionToDecimal(fraction) {
@@ -211,10 +231,13 @@
         }
 
         function decimalToOctal(num) {
+            let isNegative = num < 0;
+            num = Math.abs(num);
             let parts = num.toString().split(".");
             let integerPart = parseInt(parts[0]).toString(8);
             let fractionPart = parts[1] ? decimalFractionToOctal(parseFloat("0." + parts[1])) : "";
-            return fractionPart ? integerPart + "." + fractionPart : integerPart;
+            let result = fractionPart ? integerPart + "." + fractionPart : integerPart;
+            return isNegative ? `-${result}` : result;
         }
 
         function decimalFractionToOctal(fraction) {
@@ -230,10 +253,13 @@
         }
 
         function octalToDecimal(octal) {
+            let isNegative = octal.startsWith("-");
+            octal = octal.replace("-", "");
             let parts = octal.split(".");
             let integerPart = parseInt(parts[0], 8);
             let fractionPart = parts[1] ? octalFractionToDecimal(parts[1]) : 0;
-            return integerPart + fractionPart;
+            let result = integerPart + fractionPart;
+            return isNegative ? -result : result;
         }
 
         function octalFractionToDecimal(fraction) {
@@ -245,10 +271,13 @@
         }
 
         function decimalToHex(num) {
+            let isNegative = num < 0;
+            num = Math.abs(num);
             let parts = num.toString().split(".");
             let integerPart = parseInt(parts[0]).toString(16).toUpperCase();
             let fractionPart = parts[1] ? decimalFractionToHex(parseFloat("0." + parts[1])) : "";
-            return fractionPart ? integerPart + "." + fractionPart : integerPart;
+            let result = fractionPart ? integerPart + "." + fractionPart : integerPart;
+            return isNegative ? `-${result}` : result;
         }
 
         function decimalFractionToHex(fraction) {
@@ -265,10 +294,13 @@
         }
 
         function hexToDecimal(hex) {
+            let isNegative = hex.startsWith("-");
+            hex = hex.replace("-", "");
             let parts = hex.split(".");
             let integerPart = parseInt(parts[0], 16);
             let fractionPart = parts[1] ? hexFractionToDecimal(parts[1]) : 0;
-            return integerPart + fractionPart;
+            let result = integerPart + fractionPart;
+            return isNegative ? -result : result;
         }
 
         function hexFractionToDecimal(fraction) {
@@ -278,7 +310,15 @@
             }
             return decimal;
         }
+
+        // ক্লিয়ার বাটনের ফাংশন
+        function clearAll() {
+            document.getElementById("decimal").value = "";
+            document.getElementById("binary").value = "";
+            document.getElementById("octal").value = "";
+            document.getElementById("hexadecimal").value = "";
+        }
     </script>
 
 </body>
-</html>
+    </html>
